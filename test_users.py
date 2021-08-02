@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly_test'
@@ -38,7 +38,7 @@ class UserViewsTestCase(TestCase):
 
     def test_list_users(self):
         with app.test_client() as client:
-            resp = client.get("/")
+            resp = client.get("/users")
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -46,7 +46,7 @@ class UserViewsTestCase(TestCase):
 
     def test_show_user(self):
         with app.test_client() as client:
-            resp = client.get(f"/{self.user_id}")
+            resp = client.get(f"/users/{self.user_id}")
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -55,15 +55,15 @@ class UserViewsTestCase(TestCase):
     def test_create_user(self):
         with app.test_client() as client:
             d = {"first_name": "Tom", "last_name": "Cruise", "image_url": "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg"}
-            resp = client.post("/create_user", data=d, follow_redirects=True)
+            resp = client.post("/users/new", data=d, follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Tom Cruise", html)
+            self.assertIn('Tom Cruise', html)
 
     def test_delete_user(self):
         with app.test_client() as client:
-            resp = client.get("/")
+            resp = client.get("/users")
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
