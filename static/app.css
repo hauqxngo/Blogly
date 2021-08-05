@@ -1,12 +1,13 @@
 div {
     margin-left: 25px;
+    margin-top: 20px;
 }
 
 h1 {
     text-align: center;
 }
 
-input {
+input[type="text"] {
     width: 90%;
     padding: 12px 20px;
     margin: 8px 0;
